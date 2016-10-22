@@ -26,7 +26,7 @@ this关键字是javascript最复杂的机制之一。它是一个很特别的关
 this到底是什么
 
 一、为什么要使用th">
-<meta property="og:updated_time" content="2016-10-22T06:45:03.000Z">
+<meta property="og:updated_time" content="2016-10-22T06:46:30.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="你不知道的JS（笔记）">
 <meta name="twitter:description" content="最近，在看《你不知道的JS(上卷)》这本书，学下自己的笔记！！
@@ -188,9 +188,9 @@ this到底是什么
 <h2 id="一、为什么要使用this"><a href="#一、为什么要使用this" class="headerlink" title="一、为什么要使用this"></a>一、为什么要使用this</h2><p>在书中通过两段代码的对比来说明为什么要使用this。第一段代码如下：这段代码在不同的上下问对象(me和you)中重复使用函数identify()和speak(),不用针对不同的对象编写不同版本的函数。</p>
 <h2 id="代码演示"><a href="#代码演示" class="headerlink" title="代码演示"></a>代码演示</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">function identify()&#123;</div><div class="line">    return this.name.toUpperCase();</div><div class="line">&#125;</div><div class="line">function speak()&#123;</div><div class="line">    var greeting = &quot;hello, I am &quot; + identify.call(this);</div><div class="line">    console.log(greeting);</div><div class="line">&#125;</div><div class="line">var me = &#123;</div><div class="line">    name: &quot;zhou&quot;</div><div class="line">&#125;</div><div class="line">var you = &#123;</div><div class="line">    name: &quot;reader&quot;</div><div class="line">&#125;</div><div class="line">identify.call(me); //ZHOU</div><div class="line">identify.call(you); //READER</div><div class="line">speak.call(me); // hello, I am ZHOU</div><div class="line">speak.call(you); // hello, I am READER</div></pre></td></tr></table></figure>
 <h2 id="二、两种常见的对于this的误解"><a href="#二、两种常见的对于this的误解" class="headerlink" title="二、两种常见的对于this的误解"></a>二、两种常见的对于this的误解</h2><h3 id="误解1-指向函数自身"><a href="#误解1-指向函数自身" class="headerlink" title="误解1.指向函数自身"></a>误解1.指向函数自身</h3><p>常见的在函数内部引用自身的情况有：递归或者是一个在第一次被调用后自己接触绑定的事件处理器。 JavaScript的新手开发者(比如说我)通常认为：既然可以把函数看作一个对象，那就可以在调用函数时存储状态(属性的值)。<br>现在我们来分析这个模式，让大家看到this并不像所想的那样指向函数本身。下面这段代码，我们想要记录函数foo被调用的次数：</p>
-<p>&gt;<br>  function foo(num){<br>      console.log(“foo: “ + num);<br>      this.count++; //记录foo被调用的次数<br>  }<br>  foo.count = 0;</p>
-<p>  for(var i=0; i<10; i++){="" if(i=""> 5){<br>          foo(i)<br>      }<br>  }<br>   // foo: 6<br>   // foo: 7<br>   // foo: 8<br>   // foo: 9</10;></p>
-<p>   console.log(foo.count); // 0  为什么会是0呢?<br>&gt;</p>
+<blockquote>
+<p>function foo(num){<br>      console.log(“foo: “ + num);<br>      this.count++; //记录foo被调用的次数<br>  }<br>  foo.count = 0;<br>  for(var i=0; i<10; i++){="" if(i=""> 5){<br>          foo(i)<br>      }<br>  }<br>   // foo: 6<br>   // foo: 7<br>   // foo: 8<br>   // foo: 9<br>  console.log(foo.count); // 0  为什么会是0呢?</10;></p>
+</blockquote>
 
       
     </div>
