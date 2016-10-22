@@ -24,7 +24,7 @@ this此法
 this此法
 
 调用位置调用位置:就是函数在代码中被调用的位置(而不是声明位置)。要想回答this到底引用的是什么？只有仔细分析调用位置才能回答这个问题。而分析调用位置最">
-<meta property="og:updated_time" content="2016-10-22T07:55:25.000Z">
+<meta property="og:updated_time" content="2016-10-22T07:56:49.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="你不知道的JS（笔记2）--this解析1">
 <meta name="twitter:description" content="前言在 你不知道的JS（笔记1）– this的初探 中我们排除了对于this的错误理解，并且明白了每个函数的this是在调用时绑定的，完全取决于函数的调用位置。在本节中我们主要介绍一下几个主要内容：
@@ -181,26 +181,9 @@ this此法
 <li>绑定的规则</li>
 <li>this此法</li>
 </ol>
-<h2 id="调用位置"><a href="#调用位置" class="headerlink" title="调用位置"></a>调用位置</h2><p><code>调用位置</code>:就是函数在代码中被调用的位置(而不是声明位置)。要想回答this到底引用的是什么？只有仔细分析调用位置才能回答这个问题。<br>而分析调用位置最重要的就是分析调用栈。下面是调用栈的定义。</p>
+<h2 id="调用位置"><a href="#调用位置" class="headerlink" title="调用位置"></a>调用位置</h2><p><strong>调用位置</strong>:就是函数在代码中被调用的位置(而不是声明位置)。要想回答this到底引用的是什么？只有仔细分析调用位置才能回答这个问题。<br>而分析调用位置最重要的就是分析<code>调用栈</code>。下面是调用栈的定义。</p>
 <p><strong>调用栈</strong>：就是为了达到当前执行位置所调用的所有函数</p>
-<p><code>function baz(){
-     //当前调用栈是：baz
-     //因此，当前调用位置是全局作用域
-     console.log(&quot;baz&quot;);
-     bar(); //bar的调用位置
-}
-function bar(){
-     //当前调用栈是：baz -&gt; bar
-     //因此，当前调用位置是在baz中
-     console.log(&quot;bar&quot;);
-     foo(); //foo的调用位置
-}
-function foo(){
-     //当前调用栈是：baz -&gt; bar -&gt; foo
-     //因此，当前调用位置是在baz中
-     console.log(&quot;foo&quot;);
-}
-baz(); // baz的调用位置</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">function baz()&#123;</div><div class="line">     //当前调用栈是：baz</div><div class="line">     //因此，当前调用位置是全局作用域</div><div class="line">     console.log(&quot;baz&quot;);</div><div class="line">     bar(); //bar的调用位置</div><div class="line">&#125;</div><div class="line">function bar()&#123;</div><div class="line">     //当前调用栈是：baz -&gt; bar</div><div class="line">     //因此，当前调用位置是在baz中</div><div class="line">     console.log(&quot;bar&quot;);</div><div class="line">     foo(); //foo的调用位置</div><div class="line">&#125;</div><div class="line">function foo()&#123;</div><div class="line">     //当前调用栈是：baz -&gt; bar -&gt; foo</div><div class="line">     //因此，当前调用位置是在baz中</div><div class="line">     console.log(&quot;foo&quot;);</div><div class="line">&#125;</div><div class="line">baz(); // baz的调用位置</div></pre></td></tr></table></figure>
 
       
     </div>
