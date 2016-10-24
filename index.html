@@ -155,7 +155,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>在上一节中”你不知道的JS –this解析2”介绍了this的两种绑定方式，<code>默认绑定</code>和<code>隐式绑定</code>，在这一节继续介绍this的另两种绑定方式<code>显示绑定</code>和<code>new绑定</code>。那么，我们要解决的问题是上节提到的：this丢失！</p>
+        <p>在上一节中”你不知道的JS –this解析1”介绍了this的两种绑定方式，<code>默认绑定</code>和<code>隐式绑定</code>，在这一节继续介绍this的另两种绑定方式<code>显示绑定</code>和<code>new绑定</code>。那么，我们要解决的问题是上节提到的：this丢失！</p>
 <h2 id="显示绑定"><a href="#显示绑定" class="headerlink" title="显示绑定"></a>显示绑定</h2><p>在隐式绑定中，我们必须在一个对象的内部包含一个指向函数的属性，并通过这个属性间接引用函数，从而把this间接绑定到这个对象上，那么如果我们不想在每个对象内部包含函数引用，而想在每个对象上强制调用函数，该怎么做呢？<br>这时就需要 call(绑定this, 其他参数…)和apply(绑定this, 其他参数…)方法出场了，这两个方法的第一个参数都是给this准备的，不同之处在于其他参数的形式上，他们两的其他参数对比如下：</p>
 <blockquote>
 <p>call(绑定this, “参数1”，”参数2”，”参数3”，”参数4”)；<br>apply(绑定this, [“参数1”，”参数2”，”参数3”，”参数4”]);</p>
