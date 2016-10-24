@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>你不知道的JS（笔记3）--this解析2 | ZhengJX&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在上一节中”你不知道的JS –this解析2”介绍了this的两种绑定方式，默认绑定和隐式绑定，在这一节继续介绍this的另两种绑定方式显示绑定和new绑定。那么，我们要解决的问题是上节提到的：this丢失！
+显示绑定在隐式绑定中，我们必须在一个对象的内部包含一个指向函数的属性，并通过这个属性间接引用函数，从而把this间接绑定到这个对象上，那么如果我们不想在每个对象内部包含函数引用，而想在每个对">
+<meta property="og:type" content="article">
+<meta property="og:title" content="你不知道的JS（笔记3）--this解析2">
+<meta property="og:url" content="http://zhengjunxiang.github.io/2016/10/24/你不知道的JS（笔记3）-this解析2/index.html">
+<meta property="og:site_name" content="ZhengJX's Blog">
+<meta property="og:description" content="在上一节中”你不知道的JS –this解析2”介绍了this的两种绑定方式，默认绑定和隐式绑定，在这一节继续介绍this的另两种绑定方式显示绑定和new绑定。那么，我们要解决的问题是上节提到的：this丢失！
+显示绑定在隐式绑定中，我们必须在一个对象的内部包含一个指向函数的属性，并通过这个属性间接引用函数，从而把this间接绑定到这个对象上，那么如果我们不想在每个对象内部包含函数引用，而想在每个对">
+<meta property="og:updated_time" content="2016-10-24T02:59:09.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="你不知道的JS（笔记3）--this解析2">
+<meta name="twitter:description" content="在上一节中”你不知道的JS –this解析2”介绍了this的两种绑定方式，默认绑定和隐式绑定，在这一节继续介绍this的另两种绑定方式显示绑定和new绑定。那么，我们要解决的问题是上节提到的：this丢失！
+显示绑定在隐式绑定中，我们必须在一个对象的内部包含一个指向函数的属性，并通过这个属性间接引用函数，从而把this间接绑定到这个对象上，那么如果我们不想在每个对象内部包含函数引用，而想在每个对">
+  
+    <link rel="alternative" href="/atom.xml" title="ZhengJX&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <script src="/style.js"></script>
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img src="https://avatars.githubusercontent.com/u/17134351?v=3" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">ZhengJX</a></h1>
+		</hgroup>
+
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+				<li><a href="/tags/随笔">随笔</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">标签</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">友链</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="3" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="github" target="_blank" href="https://github.com/zhengjunxiang" title="github">github</a>
+		        
+					<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+		        
+					<a class="rss" target="_blank" href="#" title="rss">rss</a>
+		        
+					<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+		        
+			</div>
+		</nav>
+	</header>		
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-list"></i></div>
+  		<h1 class="header-author js-mobile-header hide">ZhengJX</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img src="https://avatars.githubusercontent.com/u/17134351?v=3" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">ZhengJX</h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/tags/随笔">随笔</a></li>
+		        
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zhengjunxiang" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="#" title="rss">rss</a>
+			        
+						<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap">
+        <article id="post-你不知道的JS（笔记3）-this解析2" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      你不知道的JS（笔记3）--this解析2
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在上一节中”你不知道的JS –this解析2”介绍了this的两种绑定方式，<code>默认绑定</code>和<code>隐式绑定</code>，在这一节继续介绍this的另两种绑定方式<code>显示绑定</code>和<code>new绑定</code>。那么，我们要解决的问题是上节提到的：this丢失！</p>
+<h2 id="显示绑定"><a href="#显示绑定" class="headerlink" title="显示绑定"></a>显示绑定</h2><p>在隐式绑定中，我们必须在一个对象的内部包含一个指向函数的属性，并通过这个属性间接引用函数，从而把this间接绑定到这个对象上，那么如果我们不想在每个对象内部包含函数引用，而想在每个对象上强制调用函数，该怎么做呢？<br>这时就需要 call(绑定this, 其他参数…)和apply(绑定this, 其他参数…)方法出场了，这两个方法的第一个参数都是给this准备的，不同之处在于其他参数的形式上，他们两的其他参数对比如下：</p>
+<blockquote>
+<p>call(绑定this, “参数1”，”参数2”，”参数3”，”参数4”)；<br>apply(绑定this, [“参数1”，”参数2”，”参数3”，”参数4”]);</p>
+</blockquote>
+<p>apply的其他参数是以数组序列形式存在的，它会在执行时将其解析成单个的参数再依次的传递到调用的函数中，这有什么用处呢？加入我们有一个数组</p>
+<blockquote>
+<p>var arr = [1,2,3,4,5,6];</p>
+</blockquote>
+<p>现在我要找到其中的最大值，当然这里有很多方法了。既然这里讲到apply那么我们就用apply方法来解决这个问题。如果想要找到一组数中最大的一个，有一个简单的方法,使用Math.max(…)。但是，该方法并不能找出一个数组中的最大值，也就是说：</p>
+<blockquote>
+<p>Math.max(1,2,3,4,5); // 可以找到最大值5<br>Math.max([1,2,3,4,5]); // 这就不行了，因为不接受以数组作为参数</p>
+</blockquote>
+<p>我们的做法就是通过：</p>
+<blockquote>
+<p>Math.max.apply(null, [1,2,3,4,5]); //得到数组中的最大值5</p>
+</blockquote>
+<p>还有很多其他方面的用处，比如push等等，似乎有点跑题了！！！不过我想说的就是通过call()和apply()这两种方法我们可以显式的绑定this到指定的对象！</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">function foo()&#123;</div><div class="line">    console.log(this.a);</div><div class="line">&#125;</div><div class="line">var obj = &#123;</div><div class="line">    a: 2</div><div class="line">&#125;</div><div class="line">foo.call(obj);//2</div></pre></td></tr></table></figure>
+<p>但是，显式绑定仍旧无法解决this丢失绑定的问题。</p>
+<h2 id="硬绑定"><a href="#硬绑定" class="headerlink" title="硬绑定"></a>硬绑定</h2><p>显式绑定的一个变种可以解决这个问题。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">function foo()&#123;</div><div class="line">    console.log(this.a);</div><div class="line">&#125;</div><div class="line">var obj = &#123;</div><div class="line">        a: 2</div><div class="line">     &#125;</div><div class="line">var bar = function()&#123;</div><div class="line">    foo.call(obj);</div><div class="line">&#125;</div><div class="line">bar();// 2</div><div class="line">setTimeout(bar, 100); // 2</div><div class="line">bar.call(window); // 2</div></pre></td></tr></table></figure>
+<p>看看它是如何工作的：我们创建了一个函数bar(),并在他的内部手动调用foo.call(obj)。因此，强制把foo的this绑定到了obj，无论之后如何调用函数bar，它总会手动在obj上调用foo。这样的形式我们称之为<code>硬绑定</code>。<br>硬绑定的典型应用场景就是创建一个包裹函数，负责接收参数并返回值：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">function foo(something)&#123;</div><div class="line">    console,log(this.a, something);</div><div class="line">    return this.a + something;</div><div class="line">&#125;</div><div class="line">var obj = &#123;</div><div class="line">    a: 2</div><div class="line">&#125;</div><div class="line">var bar = function()&#123;</div><div class="line">    return foo.apply(obj, arguments);</div><div class="line">&#125;</div><div class="line">var b = bar(3); //2, 3</div><div class="line">console.log(b); //5</div></pre></td></tr></table></figure>
+<p>另一个常用的方法是创建一个可以重复使用的辅助函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">function foo(something)&#123;</div><div class="line">    console,log(this.a, something);</div><div class="line">    return this.a + something;</div><div class="line">&#125;</div><div class="line">//简单的辅助函数</div><div class="line">function bind(fn, obj)&#123;</div><div class="line">    return function()&#123;</div><div class="line">        return fn.apply(obj, arguments);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">var obj = &#123;</div><div class="line">    a:2</div><div class="line">&#125;</div><div class="line"></div><div class="line">var bar = bind(foo, obj);</div><div class="line"></div><div class="line">var b = bar(); //2, 3</div><div class="line">console.log(b); //5</div></pre></td></tr></table></figure>
+<p>硬绑定是一种非常常用的模式，所以ES5提供了内置的方法Function.prototype.bind,它的用法如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">function foo(something)&#123;</div><div class="line">    console,log(this.a, something);</div><div class="line">        return this.a + something;</div><div class="line">&#125;</div><div class="line">var obj = &#123;</div><div class="line">    a:2</div><div class="line">&#125;</div><div class="line">var bar = foo.bind(obj);</div><div class="line">var b = bar(3); //2, 3</div><div class="line">console.log(b); //5</div></pre></td></tr></table></figure>
+<p>bind(…)会返回一个硬编码的心函数，它会把指定的参数设置为this的上下文并调用原始函数。</p>
+<h2 id="new-绑定"><a href="#new-绑定" class="headerlink" title="new 绑定"></a>new 绑定</h2><p>第四条规则，也是最后一条规则，在讲解他之前我们首先要澄清一个非常常见的关于javascript中函数和对象的误解。在传统的面向类的语言中，“构造函数”是类中的一些特殊方法，使用new初始化类是会调用类中的构造函数。通常的形式是这样</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">someThinges = new MyClass(...)</div></pre></td></tr></table></figure>
+<p>javascript中也有个new操作符，但javascript中的new操作符的机制与面向类的语言完全不同。首先我们重新定义一下JavaScrit中的“构造函数”。在Javascript中，构造函数只是一些使用new操作符时被调用的函数。它并不会属于某个类，也不会实例化一个类。实际上它甚至都不能说是一种特殊的函数类型，它们只是被new操作符调用的普通函数而已。举例来说，思考一下Number()作为构造函数时的行为，ES5.1中这样描述它</p>
+<blockquote>
+<p><code>Number</code>构造函数<br>当<code>Number</code>在<code>new</code>表达式中被调用时，它是一个构造函数：它会初始化新建的对象。</p>
+</blockquote>
+<p>所以，包括内置对象函数在内的所有函数都可以用new来调用，这种函数被称为构造函数调用，这有个非常细微的区别：实际上并不存在所位的“构造函数”，只有对于函数的“构造调用”。使用new来调用函数，会自动执行下面的操作：</p>
+<ol>
+<li>创建一个全新的对象</li>
+<li>这个新对象会被执行[[prototype]]连接（之后会细说）</li>
+<li>这个新对象会绑定到函数调用的this</li>
+<li>如果函数没有返回其他对象，那么new表达式中的函数会自动返回这个对象。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">function foo(a)&#123;</div><div class="line">    this.a = a</div><div class="line">&#125;</div><div class="line"></div><div class="line">var bar = new foo(2);</div><div class="line">console.log(bar) // foo &#123;a: 2&#125;</div><div class="line">console.log(bar.a); //2</div></pre></td></tr></table></figure>
+<p>使用new 来调用foo(…)时，我们会构造一个新的对象，并把它绑定到foo(…)调用中的this上。new是最后一种可以影响函数调用时this绑定行为的方法。我们称之为new绑定。</p>
+<h2 id="箭头函数"><a href="#箭头函数" class="headerlink" title="箭头函数"></a>箭头函数</h2><p>我们之前介绍的四条规则已经可以包含所有正常是有的函数。但是在ES6中介绍了一种无法使用这些规则的特殊函数类型：箭头函数<br>箭头函数不是使用function关键字定义的，而是使用“ =&gt; ”定义。<code>箭头函数不使用this的四种标准规则，而是根据外层作用域(函数或全局)来决定this。</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">function foo()&#123;</div><div class="line">    //返回一个箭头函数</div><div class="line">    return (a) =&gt;&#123;</div><div class="line">        //this继承自foo()</div><div class="line">        console.log(this.a);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">var obj1 = &#123;</div><div class="line">    a: 2</div><div class="line">&#125;</div><div class="line">var obj2 = &#123;</div><div class="line">    a: 3</div><div class="line">&#125;</div><div class="line">var bar = foo.call(obj1);</div><div class="line">bar.call(obj2); //2  不是3</div></pre></td></tr></table></figure>
+<p>foo()内部创建的箭头函数会捕获调用时foo()的this,由于foo()的this绑定到obj1，bar的this也会绑定到obj1上，而且箭头函数的绑定无法被修改！箭头函数最常用与回调函数中，例如事件处理器或者定时器：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">function foo()&#123;</div><div class="line">    setTimeot(()=&gt;&#123;</div><div class="line">        //这里的this在词法上继承自foo()，也就是说只要foo()绑定到了obj1上，箭头函数的this也就绑定到了obj1上</div><div class="line">        console.log(this.a)</div><div class="line">    &#125;,100)</div><div class="line">&#125;</div><div class="line">var obj1 = &#123;</div><div class="line">        a: 2</div><div class="line">    &#125;</div><div class="line">foo.call(obj1); //2</div></pre></td></tr></table></figure>
+<p>箭头函数可以像bind(..)一样确保函数的this被绑定到指定的对象，此外，其重要性还体现在他用更常见的词法作用域取代了传统的this机制。实际上在，ES6之前我们就已经使了用一种几乎和箭头函数完全一样的模式。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">function foo()&#123;</div><div class="line">    console.log(this); //Object &#123;a: 2&#125;</div><div class="line"></div><div class="line">    var self = this; //词法作用域捕获this</div><div class="line"></div><div class="line">    setTimeout(function()&#123;</div><div class="line">    console.log(this); // Window &#123;external: Object, chrome: Object, document: document, obj1: Object, obj2: Object…&#125;</div><div class="line"></div><div class="line">   console.log(self.a);</div><div class="line">    &#125;, 100);</div><div class="line">&#125;</div><div class="line">var obj1 = &#123;</div><div class="line">            a: 2</div><div class="line">        &#125;</div><div class="line">foo.call(obj1); //2</div></pre></td></tr></table></figure>
+<p>我分别在这段代码中foo()的内部，和setTimeout()的内部加了两行代码console.log(this)，当调用foo()函数并将其this绑定到obj1上时(即执行foo.call(obj1))，foo()内的this此时是Object {a: 2}，说明foo()函数中的this已经绑定到了obj1上，setTimeout()内的结果是Window…,如果你看了上一节《this全面解析（一）》的内容应该会很好理解，因为在setTimeout()方法中，函数传参相当于隐式赋值，调用方式自然运用默认规则，setTimeout()方法中函数的this指向window。为了让我们得到预期的结果，我们将foo()中的this保存下来(即var self = this),然后通过词法作用域的在setTimeout()方法中的函数中引用self变量。读者可以自行测试，如果不这样做得出的结果会是什么(undifined吗？自行验证一下吧！）<br>好吧！一不小心又啰嗦的讲了这么多。虽然，self = this和箭头函数看起来都可以取代bind(),但本质上来说，他们想取代的是this机制。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>如果要判断一个运行中函数的this绑定，就需要找到这个函数的直接调用位置。找到后就可以顺序应用下面这四条规则来判断this的绑定对象</p>
+<ol>
+<li>是否由new调用？绑定到新创建的对象</li>
+<li>是否由call()或apply()调用？绑定到指定的对象</li>
+<li>是否由上下文对象调用？绑定到那个上下文对象</li>
+<li>默认：严格模式undifined，非严格绑定到全局对象<br>ES6中的箭头函数不会使用四条标准的绑定规则，而是根据词法作用域来决定this,具体来说，箭头函数会继承外层函数调用的this绑定(无论this绑定到了什么)，这其实和ES6之前代码中的self = this 机制一样</li>
+</ol>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/10/24/你不知道的JS（笔记3）-this解析2/" class="archive-article-date">
+  	<time datetime="2016-10-24T02:35:44.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-10-24</time>
+</a>
+      
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2016/10/22/你不知道的JS（笔记2）-this解析1/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">你不知道的JS（笔记2）--this解析1</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 ZhengJX
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: false,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/",
+		innerArchive: true
+	}
+</script>
+
+<script src="/./main.js"></script>
+
+
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+      <li data-hook="tools-section-tag"><span class="text">标签</span><i class="icon-price-tags"></i></li>
+    
+    
+      <li data-hook="tools-section-friends"><span class="text">友链</span><i class="icon-link"></i></li>
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-tag">
+    			<div class="widget tagcloud" id="js-tagcloud">
+    				<a href="/tags/Javascript/" style="font-size: 10px;">Javascript</a>
+    			</div>
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-friends">
+  		
+  			<div class="friends-wrap" id="js-friends">
+  			
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="https://segmentfault.com/">Segmentfault</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/">github</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.ruanyifeng.com/blog//">阮一峰博客</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="https://developer.mozilla.org/zh-CN/">Mozilla开发者网络</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="https://www.awesomes.cn/">Awesomes</a>
+  	        
+  	        </div>
+  		
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">很惭愧&lt;br&gt;&lt;br&gt;只做了一点微小的工作&lt;br&gt;谢谢大家</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>
