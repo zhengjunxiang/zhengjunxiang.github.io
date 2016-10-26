@@ -25,7 +25,8 @@ ES6中的let关键字，可以用来在任意代码块中声明变量。
 
 老生常谈什么是闭包闭包的概念：函数可以记住并访问所在的词法作用域时，">
 <meta property="og:image" content="https://sfault-image.b0.upaiyun.com/125/327/1253275496-56f35051d7b1a">
-<meta property="og:updated_time" content="2016-10-24T06:38:12.000Z">
+<meta property="og:image" content="https://sfault-image.b0.upaiyun.com/125/125/125125388-56f35061d9e46">
+<meta property="og:updated_time" content="2016-10-26T07:05:58.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="你不知道的JS（笔记4）--作用域与闭包">
 <meta name="twitter:description" content="在讲解作用域闭包的内容之前，需要对以下概念有所掌握：
@@ -202,7 +203,22 @@ ES6中的let关键字，可以用来在任意代码块中声明变量。
 <p>问：为什么会输出66666呢？<br>答：能输出66666说明for循环内部的代码的确执行了5次。<br>问：那6是从哪来的呢？<br>答：6是我们循环的终止条件，所以输出6。<br>问：那为什么不是循环一次，输出一个值， 1，2，3，4，5这样呢？<br>答：<strong>setTimeout()函数是在循环结束时执行的，</strong>就算是你设置setTimeout(fn, 0),它也是在for循环完成后立即执行，总之就是在for循环执行完成后才执行。</p>
 <p>好了，这就不难理解了为什么会输出66666了。但这也就引出了一个更深入的话题，代码中到底什么缺陷导致它的行为同语义暗示的不一致呢？</p>
 <p>缺陷是：<strong>我们试图假设循环中的每个迭代在运行时都会给自己“捕获”一个i的副本。但是根据作用域的工作原理，实际情况是尽管循环中的五个函数是在各个迭代中分别定义的，但是它们都被封闭在一个共享的全局作用域中，因此实际上只有一个i。</strong>所以，实际的样子是这样。</p>
-<p><img src="https://sfault-image.b0.upaiyun.com/125/327/1253275496-56f35051d7b1a" alt=""></p>
+<p><img src="https://sfault-image.b0.upaiyun.com/125/327/1253275496-56f35051d7b1a" alt="全局作用域解析图"></p>
+<p>而我们想象中的样子确是这样。</p>
+<p><img src="https://sfault-image.b0.upaiyun.com/125/125/125125388-56f35061d9e46" alt=""></p>
+<p>下面回到正题。既然明白了缺陷是什么，那么要怎样做才能达到我们想象中的样子呢？答案是我们需要在每一次迭代的过程中都创建一个闭包作用域。在上文中我们已经有所铺垫，IIFE会通过声明立即执行一个函数来创建作用域。so我们可以将代码改成下面的样子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">for(var i=1; i&lt;6; i++)&#123;</div><div class="line">    (function()&#123;</div><div class="line">        setTImeout(function time()&#123;</div><div class="line">            console.log(i)</div><div class="line">        &#125;, i*1000)</div><div class="line">    &#125;)();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这样每一次迭代我们都创建了一个封闭的作用域(你可以想象为上图中黄色的矩形部分)。但是这样做仍旧不行，为什么呢？<strong>因为虽然每个延迟函数都会将IIFE在每次迭代中创建的作用域封闭起来，但我们封闭的作用域是空的，</strong>所以必须传点东西过去才能实现我们想要的结果。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">for(var i=1; i&lt;6; i++)&#123;</div><div class="line">    (function()&#123;</div><div class="line">        var j = i</div><div class="line">        setTImeout(function time()&#123;</div><div class="line">            console.log(j)</div><div class="line">        &#125;, j*1000)</div><div class="line">    &#125;)();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>ok!试试现在他能正常工作吗？对这段代码再进行一点改进</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">for(var i=1; i&lt;6; i++)&#123;</div><div class="line">    (function(j)&#123;</div><div class="line">        setTImeout(function time()&#123;</div><div class="line">            console.log(j)</div><div class="line">        &#125;, j*1000)</div><div class="line">    &#125;)(i);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>总的来说，就是在迭代内使用IIFE会为每个迭代都生成一个新的作用域，使得延迟函数可以将新的作用域封闭在每个迭代内部，我们同时在迭代的过程中将每次迭代的i值作为参数传入进新的作用域，这样在迭代中创建的封闭作用域就都会含有一个具有正确值的变量供我们访问。ok,it’s work!</p>
+<h2 id="块作用域"><a href="#块作用域" class="headerlink" title="块作用域"></a>块作用域</h2><p>仔细思考我们前面的解决方案。我们使用IIFE在每次迭代时都创建一个新的作用域。也就是说，每次迭代我们都需要一个块作用域。前面我们提到，你需要对ES6中的let关键字进行了解，它可以用来劫持块作用域，并且在这个块作用域中声明一个变量。</p>
+<p><em>本质上来讲它是将一个块转换成可以被关闭的作用域。</em></p>
+<figure class="highlight m"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">for(var i<span class="built_in">=</span><span class="number">1</span>; i&lt;<span class="number">6</span>; i++)&#123;</div><div class="line">        let j <span class="built_in">=</span> i; //闭包的块作用域</div><div class="line">        setTImeout(function time()&#123;</div><div class="line">            console.log(j)</div><div class="line">        &#125;, j*<span class="number">1000</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果将let声明在for循环的头部那么将会有一些特殊的行为，有多特殊呢？<em>它会指出变量在循环过程中不止被声明一次，每次迭代都会声明。随后的每个迭代都会使用上一个迭代结束时的值来初始化这个变量。</em>不管这句话有多拗口，看看代码吧!</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">for(let i=1; i&lt;6; i++)&#123;</div><div class="line">        setTImeout(function time()&#123;</div><div class="line">            console.log(i)</div><div class="line">        &#125;, i*1000)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>好的本节到这，再会！！</p>
 
       
     </div>
