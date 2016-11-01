@@ -137,6 +137,77 @@
       <div class="body-wrap">
         
   
+    <article id="post-es6-箭头函数学习记" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/11/01/es6-箭头函数学习记/">es6-箭头函数学习记</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>##JS中的箭头函数<br>箭头函数在JS里并不算是个新鲜的玩意儿，一直以来，JS都支持<code>--&gt;</code>这样的箭头符号。<br>很早的时候有些浏览器还不支持JS,当时的人们为了兼容这些浏览器，需要这样写JS:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;script language=&quot;javascript&quot;&gt;</div><div class="line">&lt;--</div><div class="line">    alert(&apos;Joe&apos;);</div><div class="line">// --&gt;</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure></p>
+<p>这段代码在不支持JS的浏览器里会被解读成2个未知标签和一段html注释。在支持JS的浏览器里，JS引擎会把<!--和-->看成是单行注释的开始。需要说明的是，–&gt;仅仅是在一行的开头才能表示这一行是注释，其余情况–&gt;是一个操作符，表示goes to的含义。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">function countdown(n) &#123;</div><div class="line">    while (n --&gt; 0) &#123;</div><div class="line">        alert(n);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这段代码确实能够正常运行哦。当你给<code>countdown</code>函数传入一个大于0的参数时，这个循环能够一直运行，直到n变为0为止。<br>此箭头非彼箭头，以上讲述的–&gt;并不是我们今天要讲的主角，大家权当拓展下JS知识，下面让我们进入正题。</p>
+<h2 id="特性介绍"><a href="#特性介绍" class="headerlink" title="特性介绍"></a>特性介绍</h2><p>箭头函数是ES6新增的特性之一，它为JS这门语言提供了一种全新的书写函数的语法。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">// ES5</div><div class="line">var double = nums.map(function (v) &#123;</div><div class="line">    return 2 * n;</div><div class="line">&#125;);</div><div class="line"></div><div class="line">// ES6</div><div class="line">var double = nums.map(v =&gt; 2 * n);</div></pre></td></tr></table></figure></p>
+<p>箭头函数简化了原先的函数语法，不需要再写<code>function</code>，如果函数体只有一行代码的话连<code>return</code>都不用写，这个特性对于热衷于简化流程和工作的程序员来说相当对胃口。</p>
+<p>使用箭头函数有几个注意点：</p>
+<p>##函数体<br>箭头函数支持两种模式的函数体写法，我们姑且叫他简洁函数体和块级函数体。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">// 简洁函数体</div><div class="line">var fn = x =&gt; x * x;</div><div class="line">// 块级函数体</div><div class="line">var fn = (x, y) =&gt; &#123;return x + y;&#125;;</div></pre></td></tr></table></figure></p>
+<p>简介函数体默认会把表达式的结果返回，块级函数体需要手动<code>return</code>。如果想要返回一个对象又想使用简洁函数体的话，需要这么写：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">var fn = () =&gt; (&#123;&#125;);</div><div class="line">fn();   // &#123;&#125;</div></pre></td></tr></table></figure></p>
+<p>如果写成<code>var fn = () =&gt; {};</code>，那么执行<code>fn()</code>只能返回<code>undefined</code>。</p>
+<p>###this<br>用<code>function</code>生成的函数会定义一个自己的<code>this</code>，而箭头函数没有自己的<code>this</code>，而是会和上一层的作用域共享<code>this</code>。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">function Person() &#123;</div><div class="line">    this.age = 0;</div><div class="line">    var self = this;</div><div class="line">    setTimeout(function () &#123;</div><div class="line">        self.age++;</div><div class="line">        console.log(self.age);</div><div class="line">    &#125;, 1000);</div><div class="line">&#125;</div><div class="line">var p = new Person();</div></pre></td></tr></table></figure></p>
+<p>这段代码里，<code>setTimeout</code>的参数<code>function</code>中需要操作外层的<code>age</code>属性，必须要把<code>this</code>赋值给<code>self</code>，然后通过<code>self</code>来获取到<code>age</code></p>
+<p>如果使用箭头函数则省事很多，代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">function Person() &#123;</div><div class="line">    this.age = 0;</div><div class="line">    setTimeout(() =&gt; &#123;</div><div class="line">        this.age++;</div><div class="line">        console.log(this.age);</div><div class="line">    &#125;, 1000);</div><div class="line">&#125;</div><div class="line">var p = new Person();</div></pre></td></tr></table></figure></p>
+<p>##apply &amp; call<br>由于箭头函数已经绑定了<code>this</code>的值，即使使用<code>apply</code>或者<code>call</code>也不能只能起到传参数的作用，并不能强行改变箭头函数里的<code>this</code>。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">var adder = &#123;</div><div class="line">    x: 1,</div><div class="line">    add1: function (y) &#123;</div><div class="line">        var fn = v =&gt; v + this.x;</div><div class="line">        return fn(y);</div><div class="line">    &#125;,</div><div class="line">    add2: function (y) &#123;</div><div class="line">        var fn = v =&gt; v + this.x;</div><div class="line">        var whatever = &#123;</div><div class="line">            x: 2</div><div class="line">        &#125;;</div><div class="line">        return fn.call(whatever, y);</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">adder.add1(1);    // 2</div><div class="line">adder.add2(1);    // 仍然是2</div></pre></td></tr></table></figure></p>
+<p>##arguments<br>普通函数里<code>arguments</code>代表了调用时传入的参数，但是箭头函数不然，在箭头函数中无法使用<code>arguments</code><br>当然，<code>ES6</code>中也有办法可以让箭头函数像普通函数一样使用类似于<code>arguments</code>这样的类数组对象<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">var fn = (...rest) =&gt; rest[0];</div><div class="line">fn(2);    // 2</div></pre></td></tr></table></figure></p>
+<p><code>...rest</code>也是<code>ES6</code>的一个新特性，之后会介绍。</p>
+<p>##不能被new<br>箭头函数不能与<code>new</code>关键字一起使用，会报错<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">var Fn = () =&gt; &#123;</div><div class="line">    this.a = 1;</div><div class="line">&#125;;</div><div class="line">var f = new Fn();    // Error</div></pre></td></tr></table></figure></p>
+<p>##使用场景<br>在我看来，箭头函数几乎可以完全取代<code>function</code>，除非是函数需要进行递归或者需要可变的<code>this</code>对象，其他场景我认为都可以使用箭头函数。</p>
+<p>##参考资料</p>
+<ul>
+<li><a href="https://hacks.mozilla.org/2015/06/es6-in-depth-arrow-functions/" target="_blank" rel="external">ES6 In Depth: Arrow functions</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions" target="_blank" rel="external">Arrow functions</a></li>
+</ul>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/11/01/es6-箭头函数学习记/" class="archive-article-date">
+  	<time datetime="2016-11-01T07:58:21.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-01</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
     <article id="post-es6-箭头函数" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
