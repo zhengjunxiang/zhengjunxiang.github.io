@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[mac中查看端口使用情况]]></title>
+    <url>%2F2017%2F06%2F01%2Fmac%E4%B8%AD%E6%9F%A5%E7%9C%8B%E7%AB%AF%E5%8F%A3%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5%2F</url>
+    <content type="text"><![CDATA[查看Mac端口的占用情况Mac下可以使用 lsof 命令行来查看端口占用情况，lsof 是一个列出当前系统打开文件工具。使用 lsof 会列举所有占用的端口列表：1$ lsof 使用less可以用于分页展示，如：1$ lsof | less 也可以使用 -i 查看某个端口是否被占用，如：1$ lsof -i:3000 如果端口被占用，则会返回相关信息，如果没被占用，则不返回任何信息。例如在命令行中会打印出：12COMMAND PID USER FD TYPE DEVICE SIZE/OFF NODE NAMEnode 88194 zhengjx 30u IPv4 0xfbdc710a3cc9531f 0t0 TCP *:terabase (LISTEN) 这时可以使用：1sudo kill PID(88194) 来关闭占用这个端口的进程。 lsof语法格式是：lsof ［options］ filename 常用的参数列表：lsof filename 显示打开指定文件的所有进程lsof -a 表示两个参数都必须满足时才显示结果lsof -c string 显示command列中包含指定字符的进程所有打开的文件lsof -u username 显示所属user进程打开的文件lsof -g gid 显示归属gid的进程情况lsof +d /dir/ 显示目录下被进程打开的文件lsof +d /dir/ 同上，但是会搜索目录下的所有目录，时间相对较长lsof -d fd 显示指定文件描述符的进程lsof -n 不将ip转换为hostname，缺省是不加上-n参数lsof -i 用以显示符合条件的进程情况lsof -i[46] [protocol][@hostname|hostaddr][:service|port] 46 –&gt; ipv4 or ipv6 protocol –&gt; tcp or udp hostname –&gt; internet host name hostaddr –&gt; ipv4地址 service –&gt; /etc/service中的 service name (可以不只一个) port –&gt; 端口号 (可以不只一个) lsof其他的用途： 查找谁在使用文件系统在卸载文件系统时，如果该文件系统中有任何打开的文件，操作通常将会失败。那么通过lsof可以找出那些进程在使用当前要卸载的文件系统，如下：lsof /gtes11/ 恢复删除的文件当linux计算机受到入侵时，常见的情况是日志文件被删除，以掩盖攻击者的踪迹。管理错误也可能导致意外删除重要的文件，比如在清理旧日志时，意外地删除了数据库的活动事务日志。有时可以通过lsof来恢复这些文件。]]></content>
+      <tags>
+        <tag>mac</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[2016年终总结]]></title>
     <url>%2F2016%2F12%2F31%2F2016%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93%2F</url>
     <content type="text"><![CDATA[第一次写年终总结，对自己这一年里的付出和收获做一次记录。 回顾2016：这一年里，开启了许多人生的第一次！这一年，第一次来带了北京。第一次，看到了雪，也第一次感受了雾霾，第一次，出国旅游，也第一次知道了学好英语的重要性；有收获，有遗憾！这一年，大部分时间都在北京度过；见识了繁华的市区，和广阔的郊外；北京–远比我想象中的大！可以说，这是我人生中收获的一年，从迷茫的应届生，到小码农；期间付出了很多，走了不少弯路，还好，我没放弃！有了自己的目标，当个有出息的程序员；改掉懒惰和拖延，培养起了自己的学习习惯；在工作中得到了技能的提升；失去了陪伴家人的机会，16年没回家过春节；没去长城，故宫等景点走走，自己太宅了。 北京，这座经济快速发展的古城，见识了在现代高新科技气息下，透露出点传统文化韵味；奇妙但不新奇； 开始了规划自己的生活和工作！懂得重要的事情，一定要事先做好准备，最好有本子记录下时间，做好规划；每天给自己定个目标计划，几天看做完哪些事情，哪些先做等；定期看一本书，技术类或自传类；保持学习的心态，多看外文的技术类社区和视频；要对英语保持兴趣，不懂得的单词立即翻译； 展望2017：提高自己的英语水平，出国旅游一次；工作中得到更好的提升；家人平安，美满！]]></content>
